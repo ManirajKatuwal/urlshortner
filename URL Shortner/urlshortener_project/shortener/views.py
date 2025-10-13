@@ -16,7 +16,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from django.http import FileResponse
 
-# ---------- Auth views ----------
+#  Auth views
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -43,13 +43,13 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-# ---------- Home / Dashboard ----------
+#  Dashboard
 def home(request):
     if request.user.is_authenticated:
         return redirect('list_urls')
     return render(request, 'shortener/home.html')
 
-# ---------- Create short URL ----------
+# Create short URL
 @login_required
 def create_shorturl(request):
     if request.method == 'POST':
@@ -69,7 +69,7 @@ def create_shorturl(request):
                         custom=True
                     )
                 else:
-                    # create with random slug first to reserve
+                    # random slug 
                     temp_slug = generate_slug_for()
                     obj = ShortURL.objects.create(
                         owner=request.user,
@@ -78,11 +78,9 @@ def create_shorturl(request):
                         expires_at=expires_at,
                         custom=False
                     )
-                    # now if you prefer base62 encoding of pk, update slug
                     obj.slug = unique_slug_from_pk(obj.pk)
-                    # ensure uniqueness; if collision improbable but check
+                    # uniqueness
                     if ShortURL.objects.filter(slug=obj.slug).exclude(pk=obj.pk).exists():
-                        # fallback random
                         obj.slug = generate_slug_for()
                     obj.save()
             return redirect('list_urls')
@@ -90,7 +88,7 @@ def create_shorturl(request):
         form = ShortURLCreateForm()
     return render(request, 'shortener/create.html', {'form': form})
 
-# ---------- List / Manage ----------
+# List 
 @login_required
 def list_urls(request):
     urls = ShortURL.objects.filter(owner=request.user).order_by('-created_at')
@@ -116,18 +114,18 @@ def delete_url(request, pk):
         return redirect('list_urls')
     return render(request, 'shortener/delete_confirm.html', {'object': obj})
 
-# ---------- Stats ----------
+# Stats 
 @login_required
 def url_stats(request, pk):
     obj = get_object_or_404(ShortURL, pk=pk, owner=request.user)
     clicks = obj.clicks.order_by('-timestamp')[:200]  # last 200 clicks
     return render(request, 'shortener/stats.html', {'object': obj, 'clicks': clicks})
 
-# ---------- QR code view ----------
+# QR code view 
 @login_required
 def qr_code_view(request, slug):
     obj = get_object_or_404(ShortURL, slug=slug, owner=request.user)
-    # generate QR for the absolute short URL
+    # generate QR
     short_url = request.build_absolute_uri(reverse('shortener_redirect', args=[obj.slug]))
     img = qrcode.make(short_url)
     buf = BytesIO()
@@ -135,14 +133,13 @@ def qr_code_view(request, slug):
     buf.seek(0)
     return FileResponse(buf, as_attachment=False, filename=f'{obj.slug}.png')
 
-# ---------- Redirect view ----------
+# Redirect view 
 def shortener_redirect(request, slug):
     obj = get_object_or_404(ShortURL, slug=slug)
     # check expiration
     if obj.is_expired():
-        # show a simple page or do 410 Gone
         return render(request, 'shortener/expired.html', {'object': obj}, status=410)
-    # increment click count and record click
+    # click record and count
     obj.click_count = obj.click_count + 1
     obj.save(update_fields=['click_count'])
     # create Click record

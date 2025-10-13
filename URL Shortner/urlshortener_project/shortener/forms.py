@@ -15,7 +15,7 @@ class ShortURLCreateForm(forms.ModelForm):
     def clean_custom_slug(self):
         slug = self.cleaned_data.get('custom_slug', '').strip()
         if slug:
-            # basic validation
+            #validation
             import re
             if not re.match(r'^[A-Za-z0-9\-_]+$', slug):
                 raise forms.ValidationError("Slug may only contain letters, numbers, hyphens and underscores.")

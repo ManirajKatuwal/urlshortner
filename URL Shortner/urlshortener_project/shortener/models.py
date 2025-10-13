@@ -10,8 +10,8 @@ class ShortURL(models.Model):
     slug = models.CharField(max_length=100, unique=True, db_index=True)  # short key
     created_at = models.DateTimeField(auto_now_add=True)
     click_count = models.PositiveIntegerField(default=0)
-    expires_at = models.DateTimeField(null=True, blank=True)  # optional expiration
-    custom = models.BooleanField(default=False)  # indicates user supplied slug
+    expires_at = models.DateTimeField(null=True, blank=True)  # expiration
+    custom = models.BooleanField(default=False)  # user supplied slug
 
     def __str__(self):
         return f"{self.slug} -> {self.original_url}"
@@ -22,7 +22,6 @@ class ShortURL(models.Model):
         return False
 
     def get_absolute_short_url(self, request=None):
-        # if you want to build full short URL
         if request:
             return request.build_absolute_uri(reverse('shortener_redirect', args=[self.slug]))
         return reverse('shortener_redirect', args=[self.slug])
