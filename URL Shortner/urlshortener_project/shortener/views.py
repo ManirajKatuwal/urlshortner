@@ -139,7 +139,6 @@ def shortener_redirect(request, slug):
     # check expiration
     if obj.is_expired():
         return render(request, 'shortener/expired.html', {'object': obj}, status=410)
-    # click record and count
     obj.click_count = obj.click_count + 1
     obj.save(update_fields=['click_count'])
     # create Click record

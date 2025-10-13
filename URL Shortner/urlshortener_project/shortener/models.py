@@ -10,8 +10,8 @@ class ShortURL(models.Model):
     slug = models.CharField(max_length=100, unique=True, db_index=True)  # short key
     created_at = models.DateTimeField(auto_now_add=True)
     click_count = models.PositiveIntegerField(default=0)
-    expires_at = models.DateTimeField(null=True, blank=True)  # expiration
-    custom = models.BooleanField(default=False)  # user supplied slug
+    expires_at = models.DateTimeField(null=True, blank=True)  # expiry
+    custom = models.BooleanField(default=False)  # custom slug
 
     def __str__(self):
         return f"{self.slug} -> {self.original_url}"
