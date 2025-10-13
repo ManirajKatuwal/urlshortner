@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Create Short URL</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+      <label>Custom slug (optional):</label>
+      <input type="text" name="custom_slug" maxlength="100" />
+    </p>
+    <button type="submit">Shorten</button>
+  </form>
+{% endblock %}

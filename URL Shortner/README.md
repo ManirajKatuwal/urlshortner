@@ -40,21 +40,21 @@ URL Shortner/
 
 ## Setup Instructions
 
-1. **Clone the repository**
-   git clone <your-repo-url>
-   cd "URL Shortner"
+1. Clone the repository
+   git clone https://github.com/ManirajKatuwal/urlshortner.git
+   cd URL Shortner
 
-2. **Install dependencies**
+2. Install dependencies
    pip install -r requirements.txt
 
-3. **Apply migrations**
+3. Apply migrations
    python urlshortener_project/manage.py migrate
    
-4. **Run the development server**
+4. Run the development server
    python urlshortener_project/manage.py runserver
    
 
-5. **Access the app**
+5. Access the app
    Open your browser and go to `http://127.0.0.1:8000/`
 
 ## Customization

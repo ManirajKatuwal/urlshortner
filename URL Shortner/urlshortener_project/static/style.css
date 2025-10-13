@@ -1,0 +1,7 @@
+/* static/style.css */
+body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; color: #222; }
+a { color: #1b6; text-decoration: none; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+th { background: #f6f6f6; }
+td, th { padding: 8px; border: 1px solid #eaeaea; }
+button { padding: 8px 12px; }

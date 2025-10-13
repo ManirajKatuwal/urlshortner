@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Stats for {{ object.slug }}</h2>
+  <p>Original URL: <a href="{{ object.original_url }}">{{ object.original_url }}</a></p>
+  <p>Short link: <a href="{% url 'shortener_redirect' object.slug %}">{{ request.build_absolute_uri|slice:":-1" }}{% url 'shortener_redirect' object.slug %}</a></p>
+  <p>Clicks: {{ object.click_count }}</p>
+  <h3>Recent Clicks</h3>
+  <ul>
+    {% for click in clicks %}
+      <li>{{ click.timestamp }} — {{ click.ip_address }} — {{ click.user_agent|truncatechars:50 }}</li>
+    {% empty %}
+      <li>No clicks yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
